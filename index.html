@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>files.auspatious.com</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23194bfd'/%3E%3Crect x='9' y='15' width='30' height='20' rx='5' fill='%23191919'/%3E%3Ccircle cx='18' cy='25' r='4' fill='%23fbc27b'/%3E%3Ccircle cx='30' cy='25' r='4' fill='%23fbc27b'/%3E%3Cpath d='M24 15V7' stroke='%23fbc27b' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inclusive+Sans&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #191919; --panel: #232323; --line: #3a3a3a; --text: #f2f2f2; --muted: #a3a3a3;
+  --blue: #194bfd; --link: #6b89ff; --gold: #fbc27b;
+  --head: "Space Grotesk", sans-serif;
+  font: 16px/1.5 "Inclusive Sans", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; color: var(--text); background: var(--bg);
+  background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+main { max-width: 960px; margin: 0 auto; padding: 32px 16px 64px; }
+
+header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+header svg { width: 56px; height: 56px; flex: none; }
+h1 { margin: 0; font: 700 1.5rem var(--head); letter-spacing: .08em; text-transform: uppercase; }
+h1 span { color: var(--gold); }
+.status { margin-left: auto; font: 600 .75rem var(--head); letter-spacing: .12em; color: var(--muted); }
+.status::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: var(--gold); animation: blink 1.4s steps(2) infinite; }
+.status.ok::before { background: #7bc47f; animation: none; }
+@keyframes blink { 50% { opacity: .2; } }
+
+.bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; flex: 1 1 100%; font: 600 .9rem var(--head); }
+nav a { padding: 2px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); }
+nav a:hover { border-color: var(--blue); color: var(--link); }
+nav a:last-child { border-color: var(--blue); }
+nav i { color: var(--gold); font-style: normal; }
+input, button {
+  font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px;
+}
+input { flex: 1; min-width: 0; }
+input:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px #194bfd55; }
+input[aria-invalid=true] { border-color: #e56a6a; }
+button { cursor: pointer; font-family: var(--head); font-weight: 600; }
+button:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+button:disabled { opacity: .35; cursor: default; }
+
+.table { border: 1px solid var(--line); border-radius: 6px; background: var(--panel); position: relative; }
+.table::before, .table::after { content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid var(--gold); pointer-events: none; }
+.table::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+.table::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+.row { display: grid; grid-template-columns: 1fr 90px 130px; gap: 16px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.row:last-child { border: 0; }
+a.row:hover { background: #194bfd22; box-shadow: inset 3px 0 var(--blue); }
+a.row:hover .name { color: var(--link); }
+.row.head { padding: 8px 16px; font: 600 .75rem var(--head); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.head button { all: unset; cursor: pointer; }
+.head button:hover, .head button[aria-pressed=true] { color: var(--gold); }
+.head button[aria-pressed=true]::after { content: attr(data-dir); }
+.name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dir .name::before { content: "▸ "; color: var(--gold); }
+.num { text-align: right; font: .85rem var(--head); color: var(--muted); font-variant-numeric: tabular-nums; }
+.empty { padding: 32px 16px; text-align: center; color: var(--muted); }
+.err { color: #e56a6a; }
+
+footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: .8rem; color: var(--muted); }
+footer a:hover { color: var(--link); }
+.pager { display: flex; gap: 8px; }
+
+@media (max-width: 600px) {
+  .row { grid-template-columns: 1fr 80px; }
+  .row > :nth-child(3) { display: none; }
+  .status { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .status::before { animation: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <svg viewBox="0 0 48 48" role="img" aria-label="Auspatious files">
+      <rect width="48" height="48" rx="10" fill="#194bfd"/>
+      <rect x="9" y="15" width="30" height="20" rx="5" fill="#191919"/>
+      <circle cx="18" cy="25" r="4" fill="#fbc27b"/><circle cx="30" cy="25" r="4" fill="#fbc27b"/>
+      <path d="M24 15V8" stroke="#fbc27b" stroke-width="3"/><circle cx="24" cy="7" r="3" fill="#fbc27b"/>
+    </svg>
+    <h1>files<span>.</span>auspatious<span>.</span>com</h1>
+    <div class="status" id="status">LOADING</div>
+  </header>
+
+  <div class="bar">
+    <nav id="crumbs" aria-label="Path"></nav>
+    <input id="q" type="search" placeholder="Filter by prefix" aria-label="Filter by prefix" autocomplete="off">
+  </div>
+
+  <div class="table" id="table" role="table" aria-live="polite"></div>
+
+  <footer>
+    <a id="bucket" target="_blank" rel="noopener">Bucket ↗</a>
+    <div class="pager">
+      <button id="prev" aria-label="Previous page">← Prev</button>
+      <button id="next" aria-label="Next page">Next →</button>
+    </div>
+  </footer>
+</main>
+
+<script type="module">
+const BUCKET = 'https://s3.ap-southeast-2.amazonaws.com/files.auspatious.com/'
+const MASK = 'https://files.auspatious.com/' // public file URLs
+const PAGE = 50
+const $ = id => document.getElementById(id)
+const enc = s => s.split('/').map(encodeURIComponent).join('/')
+const esc = s => s.replace(/[&<>"]/g, c => `&#${c.charCodeAt(0)};`)
+
+let prefix = '', token = '', tokens = [], items = [], next = '', sort = ['name', 1]
+
+const bytes = n => {
+  if (!n) return ''
+  const i = Math.min(Math.floor(Math.log2(n) / 10), 4)
+  return `${+(n / 1024 ** i).toFixed(i ? 1 : 0)} ${['B', 'KB', 'MB', 'GB', 'TB'][i]}`
+}
+const ago = d => {
+  if (!d) return ''
+  const s = (d - Date.now()) / 1000, f = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+  const [u, v] = [['year', 31536e3], ['month', 2592e3], ['day', 86400], ['hour', 3600], ['minute', 60]].find(([, v]) => Math.abs(s) >= v) || ['second', 1]
+  return f.format(Math.round(s / v), u)
+}
+
+const text = (el, tag) => el.querySelector(tag)?.textContent
+
+async function load() {
+  const status = $('status')
+  status.className = 'status'; status.textContent = 'LOADING'
+  const p = new URLSearchParams({ 'list-type': 2, delimiter: '/', prefix, 'max-keys': PAGE })
+  if (token) p.set('continuation-token', token)
+  try {
+    const res = await fetch(`${BUCKET}?${p}`)
+    const xml = new DOMParser().parseFromString(await res.text(), 'text/xml')
+    if (!res.ok || !xml.querySelector('ListBucketResult')) throw Error(text(xml, 'Message') || `HTTP ${res.status}`)
+    next = text(xml, 'NextContinuationToken') || ''
+    items = [
+      ...[...xml.querySelectorAll('CommonPrefixes')].map(e => text(e, 'Prefix'))
+        .map(k => ({ dir: true, key: k, name: k.slice(0, -1).split('/').pop() + '/' })),
+      ...[...xml.querySelectorAll('Contents')].map(e => ({ key: text(e, 'Key'), size: +text(e, 'Size'), date: new Date(text(e, 'LastModified')) }))
+        .filter(f => f.key !== prefix && f.key !== 'index.html')
+        .map(f => ({ ...f, name: f.key.split('/').pop() })),
+    ]
+    status.className = 'status ok'; status.textContent = `${items.length} ITEMS`
+  } catch (e) {
+    items = []; next = ''
+    status.textContent = 'ERROR'
+    $('table').innerHTML = `<div class="empty err">${esc(e.message)}</div>`
+    return
+  }
+  render()
+}
+
+function render() {
+  const dir = prefix.slice(0, prefix.lastIndexOf('/') + 1)
+  const parts = dir.split('/').filter(Boolean)
+  $('crumbs').innerHTML = ['', ...parts].map((n, i) =>
+    `<a href="#${enc(parts.slice(0, i).join('/') + (i ? '/' : ''))}">${i ? esc(n) : '⌂ root'}</a>`).join('<i>/</i>')
+  if (document.activeElement !== $('q')) $('q').value = prefix.slice(dir.length)
+  $('bucket').href = `${BUCKET}?prefix=${enc(prefix)}`
+  $('prev').disabled = !tokens.length
+  $('next').disabled = !next
+
+  const [col, d] = sort
+  const rows = [...items].sort((a, b) =>
+    b.dir - a.dir || d * (col === 'name' ? a.name.localeCompare(b.name, undefined, { numeric: true }) : (a[col] ?? 0) - (b[col] ?? 0)))
+  const th = (c, l) => `<button data-sort="${c}" aria-pressed="${col === c}" data-dir="${d > 0 ? ' ↑' : ' ↓'}">${l}</button>`
+  $('table').innerHTML = `<div class="row head">${th('name', 'Name')}<span class="num">${th('size', 'Size')}</span><span class="num">${th('date', 'Modified')}</span></div>` +
+    (rows.map(r => `<a class="row${r.dir ? ' dir' : ''}" href="${r.dir ? '#' + enc(r.key) : MASK + enc(r.key)}">
+      <span class="name" title="${esc(r.name)}">${esc(r.name)}</span>
+      <span class="num">${bytes(r.size)}</span>
+      <span class="num" title="${r.date?.toLocaleString() ?? ''}">${ago(r.date)}</span></a>`).join('') || '<div class="empty">Nothing here.</div>')
+}
+
+const go = () => { prefix = decodeURIComponent(location.hash.slice(1)); token = ''; tokens = []; load() }
+addEventListener('hashchange', go)
+
+$('table').onclick = e => {
+  const b = e.target.closest('[data-sort]')
+  if (b) { sort = [b.dataset.sort, sort[0] === b.dataset.sort ? -sort[1] : 1]; render() }
+}
+$('next').onclick = () => { tokens.push(token); token = next; load() }
+$('prev').onclick = () => { token = tokens.pop(); load() }
+
+let t
+$('q').oninput = e => {
+  const v = e.target.value
+  e.target.ariaInvalid = v.includes('//') // S3 keys can't be meaningfully searched across slashes here
+  clearTimeout(t)
+  if (!v.includes('/')) t = setTimeout(() => { location.hash = '#' + enc(prefix.slice(0, prefix.lastIndexOf('/') + 1) + v) }, 300)
+}
+
+go()
+</script>
+</body>
+</html>
